@@ -10,6 +10,7 @@ export default function App() {
   const [weather, setWeather] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showRadar, setShowRadar] = useState(false)
 
   const loadWeatherForPoint = useCallback(async (latlng) => {
     const { lat, lng } = latlng
@@ -63,6 +64,22 @@ export default function App() {
         }}
       >
         <h1 style={{ fontSize: 16, margin: 0, flex: 1 }}>🌍 Погода на карте</h1>
+
+        <button
+          onClick={() => setShowRadar((v) => !v)}
+          style={{
+            padding: '6px 12px',
+            borderRadius: 8,
+            border: '1px solid #ccc',
+            background: showRadar ? '#2f6fed' : '#f8f8f8',
+            color: showRadar ? '#fff' : '#000',
+            cursor: 'pointer',
+            fontSize: 13,
+          }}
+        >
+          {showRadar ? '🌧️ Осадки вкл' : '🌧️ Осадки'}
+        </button>
+
         <button
           onClick={handleLocateMe}
           style={{
@@ -87,6 +104,7 @@ export default function App() {
           loading={loading}
           error={error}
           onMapClick={loadWeatherForPoint}
+          showRadar={showRadar}
         />
         {error && (
           <div

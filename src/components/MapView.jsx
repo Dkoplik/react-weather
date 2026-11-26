@@ -1,7 +1,9 @@
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet'
+import { useEffect, useRef } from 'react'
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import WeatherPopup from './WeatherPopup'
+import { fetchLatestRadarTileUrl } from '../services/api'
 
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -19,6 +21,46 @@ function ClickHandler({ onMapClick }) {
 	return null
 }
 
+function RadarLayer({ visible }) {
+	const map = useMap()
+	const layerRef = useRef(null)
+
+	useEffect(() => {
+		if (!visible) {
+			if (layerRef.current) {
+				map.removeLayer(layerRef.current)
+				layerRef.current = null
+			}
+			return
+		}
+
+		let cancelled = false
+
+		fetchLatestRadarTileUrl()
+			.then(({ tileUrl }) => {
+				if (cancelled) return
+				layerRef.current = L.tileLayer(tileUrl, {
+					opacity: 0.6,
+					attribution: 'Radar data © <a href="https://www.rainviewer.com/">RainViewer</a>',
+				})
+				layerRef.current.addTo(map)
+			})
+			.catch((err) => {
+				console.error('Radar layer error:', err)
+			})
+
+		return () => {
+			cancelled = true
+			if (layerRef.current) {
+				map.removeLayer(layerRef.current)
+				layerRef.current = null
+			}
+		}
+	}, [visible, map])
+
+	return null
+}
+
 export default function MapView({
 	center,
 	markerPosition,
@@ -27,6 +69,7 @@ export default function MapView({
 	loading,
 	error,
 	onMapClick,
+	showRadar,
 }) {
 	return (
 		<MapContainer
@@ -39,6 +82,8 @@ export default function MapView({
 				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
+
+			<RadarLayer visible={showRadar} />
 
 			<ClickHandler onMapClick={onMapClick} />
 

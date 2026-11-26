@@ -52,3 +52,24 @@ export async function fetchWeather(lat, lon) {
   if (!res.ok) throw new Error("Не удалось загрузить погоду");
   return res.json();
 }
+
+const RAINVIEWER_MANIFEST =
+  "https://api.rainviewer.com/public/weather-maps.json";
+
+/**
+ * Возвращает URL-шаблон тайлов последнего доступного радарного кадра.
+ * @returns {Promise<{ tileUrl: string, time: number }>}
+ */
+export async function fetchLatestRadarTileUrl() {
+  const res = await fetch(RAINVIEWER_MANIFEST);
+  if (!res.ok) throw new Error("Не удалось загрузить данные радара");
+
+  const data = await res.json();
+  const host = data.host;
+  const past = data.radar?.past ?? [];
+  if (past.length === 0) throw new Error("Нет доступных радарных кадров");
+
+  const latest = past[past.length - 1];
+  const tileUrl = `${host}${latest.path}/256/{z}/{x}/{y}/2/1_1.png`;
+  return { tileUrl, time: latest.time };
+}
