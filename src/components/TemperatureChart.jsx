@@ -32,8 +32,8 @@ export default function TemperatureChart({ hourlyTimes = [], hourlyTemps = [] })
 			<svg width={W} height={H} style={{ display: 'block', overflow: 'visible' }}>
 				<defs>
 					<linearGradient id="tempGrad" x1="0" y1="0" x2="0" y2="1">
-						<stop offset="0%" stopColor="#4f8cff" stopOpacity="0.35" />
-						<stop offset="100%" stopColor="#4f8cff" stopOpacity="0" />
+						<stop offset="0%" stopColor="#4f8cff" stopOpacity="0.5" />
+						<stop offset="100%" stopColor="#4f8cff" stopOpacity="0.05" />
 					</linearGradient>
 				</defs>
 				<path d={area} fill="url(#tempGrad)" />
@@ -41,12 +41,12 @@ export default function TemperatureChart({ hourlyTimes = [], hourlyTemps = [] })
 				<text x={PAD} y={12} fontSize="10" fill="#555">
 					{max.toFixed(0)}°
 				</text>
-				<text x={PAD} y={H - 2} fontSize="10" fill="#555">
+				<text x={PAD} y={H} fontSize="10" fill="#555">
 					{min.toFixed(0)}°
 				</text>
 			</svg>
 			<div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#888' }}>
-				{hourlyTimes.slice(0, 24).filter((_, i) => i % 6 === 0).map((t) => (
+				{hourlyTimes.filter((_, i) => i % 6 === 0).map((t) => (
 					<span key={t}>{t.split('T')[1]}</span>
 				))}
 			</div>

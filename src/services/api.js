@@ -2,7 +2,7 @@ const NOMINATIM_BASE = "https://nominatim.openstreetmap.org";
 const OPEN_METEO_BASE = "https://api.open-meteo.com/v1";
 
 /**
- * Обратное геокодирование: координаты → читаемый адрес.
+ * Обратное геокодирование
  * @param {number} lat
  * @param {number} lon
  * @returns {Promise<string>}
@@ -16,10 +16,7 @@ export async function reverseGeocode(lat, lon) {
   url.searchParams.set("accept-language", "ru");
 
   const res = await fetch(url.toString(), {
-    headers: {
-      // Браузер не позволяет переопределить User-Agent,
-      // но мы хотя бы передаём осмысленный Referer через запрос.
-    },
+    headers: {},
   });
 
   if (!res.ok) throw new Error("Не удалось определить адрес");

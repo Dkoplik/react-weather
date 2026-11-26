@@ -13,7 +13,6 @@ body {
   overflow: hidden;
 }
 
-/* Попап Leaflet: убираем лишние отступы и задаём нормальную типографику */
 .leaflet-popup-content {
   margin: 10px 12px;
   line-height: 1.4;

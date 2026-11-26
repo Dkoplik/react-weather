@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import MapView from './components/MapView'
 import { reverseGeocode, fetchWeather } from './services/api'
 
-const DEFAULT_CENTER = [55.751244, 37.618423] // Москва
+const DEFAULT_CENTER = [47.22664832828708, 39.71557617187] // Ростов-на-Дону
 
 export default function App() {
   const [markerPosition, setMarkerPosition] = useState(null)
@@ -19,11 +19,9 @@ export default function App() {
     setWeather(null)
 
     try {
-      // Nominatim: координаты → адрес
       const name = await reverseGeocode(lat, lng)
       setPlaceName(name)
 
-      // Open-Meteo: координаты → погода
       const data = await fetchWeather(lat, lng)
       setWeather(data)
     } catch (err) {
