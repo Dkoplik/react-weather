@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://Dkoplik.github.io/react-weather",
+  "homepage": "https://dkoplik.github.io/react-weather",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
